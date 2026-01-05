@@ -32,11 +32,15 @@ const DestinationCard = ({ destination, index = 0, onClick }: DestinationCardPro
       className="card-elevated overflow-hidden cursor-pointer group"
     >
       {/* Image */}
-      <div className="relative h-36 overflow-hidden">
+      <div className="relative h-36 overflow-hidden bg-gradient-to-br from-primary/20 to-tertiary/20">
         <img
           src={destination.image}
           alt={destination.city}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent" />
         

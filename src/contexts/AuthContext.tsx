@@ -1,46 +1,85 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 import { User } from '@/types/trip';
+import { authService } from '@/services/authService';
 import { mockUser } from '@/data/mockData';
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  signup: (name: string, email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function transformSupabaseUser(supabaseUser: SupabaseUser | null): User | null {
+  if (!supabaseUser) return null;
+  
+  return {
+    id: supabaseUser.id,
+    name: supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User',
+    email: supabaseUser.email || '',
+    avatar: supabaseUser.user_metadata?.avatar_url || mockUser.avatar,
+    joinDate: supabaseUser.created_at || new Date().toISOString(),
+    totalTrips: mockUser.totalTrips,
+    totalCountries: mockUser.totalCountries,
+    preferences: mockUser.preferences
+  };
+}
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    if (email && password.length >= 6) {
-      setUser({ ...mockUser, email });
-      return true;
-    }
-    return false;
+  useEffect(() => {
+    // Get initial session
+    authService.getSession().then(session => {
+      setUser(transformSupabaseUser(session?.user || null));
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = authService.onAuthStateChange((_event, session) => {
+      setUser(transformSupabaseUser(session?.user || null));
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const result = await authService.signIn(email, password);
+    return { success: result.success, error: result.error };
   };
 
-  const signup = async (name: string, email: string, password: string): Promise<boolean> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    if (name && email && password.length >= 6) {
-      setUser({ ...mockUser, name, email });
-      return true;
-    }
-    return false;
+  const signup = async (name: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const result = await authService.signUp(email, password, name);
+    return { success: result.success, error: result.error };
   };
 
-  const logout = () => {
-    setUser(null);
+  const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    const result = await authService.signInWithGoogle();
+    return { success: result.success, error: result.error };
+  };
+
+  const logout = async (): Promise<void> => {
+    await authService.signOut();
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, signup, logout }}>
+    <AuthContext.Provider value={{
+      user,
+      isAuthenticated: !!user,
+      loading,
+      login,
+      signup,
+      signInWithGoogle,
+      logout
+    }}>
       {children}
     </AuthContext.Provider>
   );

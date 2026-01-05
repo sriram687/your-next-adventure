@@ -10,6 +10,7 @@ import {
   Menu,
   X,
   ChevronLeft,
+  Users,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -111,7 +112,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }: AppSidebarProps) => {
         )}
         <Button
           variant="ghost"
-          onClick={logout}
+          onClick={() => logout()}
           className={cn(
             "w-full justify-start gap-3 text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10 btn-press",
             collapsed && "justify-center px-2"
