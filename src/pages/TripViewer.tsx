@@ -10,11 +10,14 @@ import {
   DollarSign,
   List,
   CalendarDays,
+  Share2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrips } from '@/contexts/TripContext';
 import { format, eachDayOfInterval, isSameDay } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
+import PageTransition from '@/components/layout/PageTransition';
 
 type ViewMode = 'timeline' | 'calendar';
 
@@ -47,84 +50,98 @@ const TripViewer = () => {
     relaxation: 'bg-warning text-warning-foreground',
   };
 
+  const handleShare = () => {
+    const shareUrl = `${window.location.origin}/share/${tripId}`;
+    navigator.clipboard.writeText(shareUrl);
+    toast.success('Link copied!', {
+      description: 'Share this link with friends and family.',
+    });
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-6 pt-12 lg:pt-0"
-    >
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-        <div className="flex items-start gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/trips')}
-            className="rounded-full mt-1"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground">
-              {trip.name}
-            </h1>
-            {trip.description && (
-              <p className="text-muted-foreground mt-1">{trip.description}</p>
-            )}
-            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <CalendarIcon className="w-4 h-4" />
-                {format(new Date(trip.startDate), 'MMM d')} - {format(new Date(trip.endDate), 'MMM d, yyyy')}
-              </span>
-              <span className="flex items-center gap-1">
-                <MapPin className="w-4 h-4" />
-                {trip.stops.length} {trip.stops.length === 1 ? 'stop' : 'stops'}
-              </span>
+    <PageTransition>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="space-y-6 pt-12 lg:pt-0"
+      >
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/trips')}
+              className="rounded-full mt-1 btn-press"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-display font-bold text-foreground">
+                {trip.name}
+              </h1>
+              {trip.description && (
+                <p className="text-muted-foreground mt-1">{trip.description}</p>
+              )}
+              <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <CalendarIcon className="w-4 h-4" />
+                  {format(new Date(trip.startDate), 'MMM d')} - {format(new Date(trip.endDate), 'MMM d, yyyy')}
+                </span>
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  {trip.stops.length} {trip.stops.length === 1 ? 'stop' : 'stops'}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex gap-3">
-          {/* View Toggle */}
-          <div className="flex rounded-lg border border-border overflow-hidden">
-            <button
-              onClick={() => setViewMode('timeline')}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors",
-                viewMode === 'timeline' ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <List className="w-4 h-4" />
-              Timeline
-            </button>
-            <button
-              onClick={() => setViewMode('calendar')}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors",
-                viewMode === 'calendar' ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <CalendarDays className="w-4 h-4" />
-              Calendar
-            </button>
+          <div className="flex flex-wrap gap-3">
+            {/* View Toggle */}
+            <div className="flex rounded-lg border border-border overflow-hidden glass dark:glass-dark">
+              <button
+                onClick={() => setViewMode('timeline')}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200",
+                  viewMode === 'timeline' ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <List className="w-4 h-4" />
+                Timeline
+              </button>
+              <button
+                onClick={() => setViewMode('calendar')}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200",
+                  viewMode === 'calendar' ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <CalendarDays className="w-4 h-4" />
+                Calendar
+              </button>
+            </div>
+            <Button onClick={handleShare} variant="outline" className="btn-press glass dark:glass-dark border-white/20">
+              <Share2 className="w-4 h-4 mr-2" />
+              Share
+            </Button>
+            <Button onClick={() => navigate(`/trips/${tripId}/edit`)} variant="outline" className="btn-press">
+              <Edit2 className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+            <Button onClick={() => navigate(`/trips/${tripId}/budget`)} className="btn-gradient-accent">
+              <DollarSign className="w-4 h-4 mr-2" />
+              Budget
+            </Button>
           </div>
-          <Button onClick={() => navigate(`/trips/${tripId}/edit`)} variant="outline">
-            <Edit2 className="w-4 h-4 mr-2" />
-            Edit
-          </Button>
-          <Button onClick={() => navigate(`/trips/${tripId}/budget`)} className="btn-gradient-accent">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Budget
-          </Button>
         </div>
-      </div>
 
-      {/* Content based on view mode */}
-      {viewMode === 'timeline' ? (
-        <TimelineView trip={trip} activityTypeColors={activityTypeColors} />
-      ) : (
-        <CalendarView trip={trip} tripDays={tripDays} activityTypeColors={activityTypeColors} />
-      )}
-    </motion.div>
+        {/* Content based on view mode */}
+        {viewMode === 'timeline' ? (
+          <TimelineView trip={trip} activityTypeColors={activityTypeColors} />
+        ) : (
+          <CalendarView trip={trip} tripDays={tripDays} activityTypeColors={activityTypeColors} />
+        )}
+      </motion.div>
+    </PageTransition>
   );
 };
 
@@ -132,7 +149,7 @@ const TimelineView = ({ trip, activityTypeColors }: { trip: any; activityTypeCol
   return (
     <div className="relative">
       {/* Vertical Line */}
-      <div className="absolute left-6 lg:left-8 top-0 bottom-0 w-0.5 bg-border" />
+      <div className="absolute left-6 lg:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-tertiary to-accent" />
 
       {/* Stops */}
       <div className="space-y-8">
@@ -141,14 +158,23 @@ const TimelineView = ({ trip, activityTypeColors }: { trip: any; activityTypeCol
             key={stop.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
+            transition={{ delay: index * 0.15 }}
             className="relative pl-14 lg:pl-20"
           >
             {/* Dot */}
-            <div className="absolute left-4 lg:left-6 w-4 h-4 rounded-full btn-gradient-primary border-4 border-background" />
+            <motion.div 
+              className="absolute left-4 lg:left-6 w-4 h-4 rounded-full btn-gradient-primary border-4 border-background"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: index * 0.15 + 0.1, type: 'spring' }}
+            />
 
             {/* Stop Card */}
-            <div className="card-elevated p-5">
+            <motion.div 
+              className="glass-card p-5"
+              whileHover={{ scale: 1.01 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 mb-4">
                 <div>
                   <h3 className="font-display font-bold text-xl text-foreground">{stop.city}</h3>
@@ -163,10 +189,13 @@ const TimelineView = ({ trip, activityTypeColors }: { trip: any; activityTypeCol
               {/* Activities */}
               {stop.activities.length > 0 && (
                 <div className="space-y-2">
-                  {stop.activities.map((activity: any) => (
-                    <div
+                  {stop.activities.map((activity: any, actIdx: number) => (
+                    <motion.div
                       key={activity.id}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-muted/50"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.15 + actIdx * 0.05 }}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors"
                     >
                       <div className={cn(
                         "w-2 h-2 rounded-full",
@@ -183,11 +212,11 @@ const TimelineView = ({ trip, activityTypeColors }: { trip: any; activityTypeCol
                       {activity.cost > 0 && (
                         <span className="text-sm font-medium text-foreground">${activity.cost}</span>
                       )}
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               )}
-            </div>
+            </motion.div>
           </motion.div>
         ))}
       </div>
@@ -197,7 +226,7 @@ const TimelineView = ({ trip, activityTypeColors }: { trip: any; activityTypeCol
 
 const CalendarView = ({ trip, tripDays, activityTypeColors }: { trip: any; tripDays: Date[]; activityTypeColors: Record<string, string> }) => {
   return (
-    <div className="card-elevated p-5 overflow-x-auto">
+    <div className="glass-card p-5 overflow-x-auto">
       <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(tripDays.length, 7)}, minmax(150px, 1fr))` }}>
         {tripDays.map((day, index) => {
           const dayStop = trip.stops.find((stop: any) =>
@@ -227,16 +256,17 @@ const CalendarView = ({ trip, tripDays, activityTypeColors }: { trip: any; tripD
 
               <div className="space-y-2">
                 {dayActivities.map((activity: any) => (
-                  <div
+                  <motion.div
                     key={activity.id}
+                    whileHover={{ scale: 1.02 }}
                     className={cn(
-                      "p-2 rounded-lg text-xs",
+                      "p-2 rounded-lg text-xs cursor-pointer transition-transform",
                       activityTypeColors[activity.type] || 'bg-muted text-muted-foreground'
                     )}
                   >
                     <p className="font-medium line-clamp-2">{activity.name}</p>
                     <p className="opacity-80 mt-1">{activity.time}</p>
-                  </div>
+                  </motion.div>
                 ))}
                 {dayActivities.length === 0 && (
                   <p className="text-xs text-muted-foreground/50 italic">No activities</p>

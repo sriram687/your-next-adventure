@@ -7,6 +7,7 @@ interface TripContextType {
   currentTrip: Trip | null;
   setCurrentTrip: (trip: Trip | null) => void;
   createTrip: (trip: Omit<Trip, 'id' | 'createdAt' | 'updatedAt'>) => Trip;
+  addTrip: (trip: Trip) => void;
   updateTrip: (id: string, updates: Partial<Trip>) => void;
   deleteTrip: (id: string) => void;
   addStop: (tripId: string, stop: Omit<Stop, 'id'>) => void;
@@ -32,6 +33,10 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
     };
     setTrips(prev => [...prev, newTrip]);
     return newTrip;
+  };
+
+  const addTrip = (trip: Trip) => {
+    setTrips(prev => [...prev, trip]);
   };
 
   const updateTrip = (id: string, updates: Partial<Trip>) => {
@@ -135,6 +140,7 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         currentTrip,
         setCurrentTrip,
         createTrip,
+        addTrip,
         updateTrip,
         deleteTrip,
         addStop,
