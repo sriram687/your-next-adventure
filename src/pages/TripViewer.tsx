@@ -10,7 +10,6 @@ import {
   DollarSign,
   List,
   CalendarDays,
-  Share2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrips } from '@/contexts/TripContext';
@@ -32,7 +31,12 @@ const TripViewer = () => {
   if (!trip) {
     return (
       <div className="flex items-center justify-center h-96">
-        <p className="text-muted-foreground">Trip not found</p>
+        <div className="text-center">
+          <p className="text-muted-foreground mb-4">Trip not found</p>
+          <Button onClick={() => navigate('/trips')} variant="outline">
+            Back to Trips
+          </Button>
+        </div>
       </div>
     );
   }
@@ -48,14 +52,6 @@ const TripViewer = () => {
     adventure: 'bg-success text-success-foreground',
     culture: 'bg-primary text-primary-foreground',
     relaxation: 'bg-warning text-warning-foreground',
-  };
-
-  const handleShare = () => {
-    const shareUrl = `${window.location.origin}/share/${tripId}`;
-    navigator.clipboard.writeText(shareUrl);
-    toast.success('Link copied!', {
-      description: 'Share this link with friends and family.',
-    });
   };
 
   return (
@@ -119,10 +115,6 @@ const TripViewer = () => {
                 Calendar
               </button>
             </div>
-            <Button onClick={handleShare} variant="outline" className="btn-press glass dark:glass-dark border-white/20">
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
-            </Button>
             <Button onClick={() => navigate(`/trips/${tripId}/edit`)} variant="outline" className="btn-press">
               <Edit2 className="w-4 h-4 mr-2" />
               Edit
@@ -145,7 +137,10 @@ const TripViewer = () => {
   );
 };
 
-const TimelineView = ({ trip, activityTypeColors }: { trip: any; activityTypeColors: Record<string, string> }) => {
+const TimelineView = ({ trip, activityTypeColors }: { 
+  trip: any; 
+  activityTypeColors: Record<string, string>; 
+}) => {
   return (
     <div className="relative">
       {/* Vertical Line */}
@@ -224,7 +219,11 @@ const TimelineView = ({ trip, activityTypeColors }: { trip: any; activityTypeCol
   );
 };
 
-const CalendarView = ({ trip, tripDays, activityTypeColors }: { trip: any; tripDays: Date[]; activityTypeColors: Record<string, string> }) => {
+const CalendarView = ({ trip, tripDays, activityTypeColors }: { 
+  trip: any; 
+  tripDays: Date[]; 
+  activityTypeColors: Record<string, string>; 
+}) => {
   return (
     <div className="glass-card p-5 overflow-x-auto">
       <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(tripDays.length, 7)}, minmax(150px, 1fr))` }}>

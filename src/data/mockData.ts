@@ -1,8 +1,4 @@
 import { Trip, Destination, User } from '@/types/trip';
-import santoriniImg from '@/assets/destinations/santorini.jpg';
-import tokyoImg from '@/assets/destinations/tokyo.jpg';
-import baliImg from '@/assets/destinations/bali.jpg';
-import machuPicchuImg from '@/assets/destinations/machu-picchu.jpg';
 
 export const mockUser: User = {
   id: '1',
@@ -20,7 +16,7 @@ export const mockTrips: Trip[] = [
     description: 'Exploring the best of Western Europe',
     startDate: '2024-06-15',
     endDate: '2024-07-01',
-    coverPhoto: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800',
+    coverPhoto: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80',
     stops: [
       {
         id: 's1',
@@ -67,7 +63,7 @@ export const mockTrips: Trip[] = [
     description: 'Springtime magic in ancient Japan',
     startDate: '2025-03-25',
     endDate: '2025-04-05',
-    coverPhoto: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800',
+    coverPhoto: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
     stops: [
       {
         id: 's4',
@@ -103,7 +99,7 @@ export const mockTrips: Trip[] = [
     description: 'Mountain peaks and alpine adventures',
     startDate: '2025-01-10',
     endDate: '2025-01-20',
-    coverPhoto: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800',
+    coverPhoto: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
     stops: [
       {
         id: 's6',
@@ -138,7 +134,7 @@ export const mockTrips: Trip[] = [
     description: 'Sun-kissed Greek island escape',
     startDate: '2025-05-15',
     endDate: '2025-05-19',
-    coverPhoto: santoriniImg,
+    coverPhoto: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
     stops: [
       {
         id: 's8',
@@ -163,7 +159,7 @@ export const mockTrips: Trip[] = [
     description: 'A culinary journey through the Big Apple',
     startDate: '2025-02-20',
     endDate: '2025-02-26',
-    coverPhoto: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800',
+    coverPhoto: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
     stops: [
       {
         id: 's9',
@@ -189,7 +185,7 @@ export const mockTrips: Trip[] = [
     description: 'Wellness and adventure in paradise',
     startDate: '2025-04-10',
     endDate: '2025-04-20',
-    coverPhoto: baliImg,
+    coverPhoto: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80',
     stops: [
       {
         id: 's10',
@@ -225,7 +221,7 @@ export const mockTrips: Trip[] = [
     description: 'Untamed wilderness at the end of the world',
     startDate: '2025-11-01',
     endDate: '2025-11-12',
-    coverPhoto: 'https://images.unsplash.com/photo-1464278533981-50106e6176b1?w=800',
+    coverPhoto: 'https://images.unsplash.com/photo-1464278533981-50106e6176b1?w=800&q=80',
     stops: [
       {
         id: 's12',
@@ -260,7 +256,7 @@ export const mockTrips: Trip[] = [
     description: 'Colors, spices, and desert adventures',
     startDate: '2025-03-01',
     endDate: '2025-03-10',
-    coverPhoto: 'https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=800',
+    coverPhoto: 'https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=800&q=80',
     stops: [
       {
         id: 's14',
@@ -306,7 +302,7 @@ export const mockTrips: Trip[] = [
     description: 'Fire and ice around the island',
     startDate: '2025-06-20',
     endDate: '2025-07-01',
-    coverPhoto: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=800',
+    coverPhoto: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=800&q=80',
     stops: [
       {
         id: 's17',
@@ -352,7 +348,7 @@ export const mockTrips: Trip[] = [
     description: 'From bustling cities to serene bays',
     startDate: '2025-09-05',
     endDate: '2025-09-18',
-    coverPhoto: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800',
+    coverPhoto: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80',
     stops: [
       {
         id: 's20',
@@ -399,7 +395,7 @@ export const recommendedDestinations: Destination[] = [
     id: 'd1',
     city: 'Santorini',
     country: 'Greece',
-    image: santoriniImg,
+    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80',
     costIndex: 'expensive',
     popularity: 95,
     description: 'Iconic white-washed buildings and stunning sunsets',
@@ -408,7 +404,7 @@ export const recommendedDestinations: Destination[] = [
     id: 'd2',
     city: 'Tokyo',
     country: 'Japan',
-    image: tokyoImg,
+    image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80',
     costIndex: 'moderate',
     popularity: 92,
     description: 'Where ancient traditions meet cutting-edge technology',
@@ -417,7 +413,7 @@ export const recommendedDestinations: Destination[] = [
     id: 'd3',
     city: 'Bali',
     country: 'Indonesia',
-    image: baliImg,
+    image: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80',
     costIndex: 'budget',
     popularity: 88,
     description: 'Tropical paradise with rich culture and adventure',
@@ -426,7 +422,7 @@ export const recommendedDestinations: Destination[] = [
     id: 'd4',
     city: 'Machu Picchu',
     country: 'Peru',
-    image: machuPicchuImg,
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80',
     costIndex: 'moderate',
     popularity: 90,
     description: 'Ancient Incan citadel high in the Andes mountains',

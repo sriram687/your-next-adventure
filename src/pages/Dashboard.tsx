@@ -19,11 +19,13 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const recentTrips = trips.slice(0, 6);
-  const upcomingTrips = trips.filter(trip => new Date(trip.startDate) > new Date()).slice(0, 2);
+  // Ensure trips is always an array
+  const safeTrips = trips || [];
+  const recentTrips = safeTrips.slice(0, 6);
+  const upcomingTrips = safeTrips.filter(trip => new Date(trip.startDate) > new Date()).slice(0, 2);
 
   // Calculate total budget across all trips
-  const totalBudget = trips.reduce((acc, trip) => ({
+  const totalBudget = safeTrips.reduce((acc, trip) => ({
     transport: acc.transport + trip.budget.transport,
     stay: acc.stay + trip.budget.stay,
     food: acc.food + trip.budget.meals,
@@ -86,14 +88,14 @@ const Dashboard = () => {
           <StatCard
             icon={MapPin}
             label="Total Trips"
-            value={trips.length.toString()}
+            value={safeTrips.length.toString()}
             color="primary"
             delay={0}
           />
           <StatCard
             icon={MapPin}
             label="Cities Visited"
-            value={trips.reduce((acc, trip) => acc + trip.stops.length, 0).toString()}
+            value={safeTrips.reduce((acc, trip) => acc + trip.stops.length, 0).toString()}
             color="accent"
             delay={1}
           />
@@ -164,7 +166,7 @@ const Dashboard = () => {
             <h2 className="text-xl font-display font-bold text-foreground">Recommended Destinations</h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {recommendedDestinations.map((destination, index) => (
+            {recommendedDestinations.slice(0, 8).map((destination, index) => (
               <DestinationCard key={destination.id} destination={destination} index={index} />
             ))}
           </div>

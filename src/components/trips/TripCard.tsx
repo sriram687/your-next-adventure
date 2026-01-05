@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Eye, Edit2, Trash2, DollarSign } from 'lucide-react';
+import { Calendar, MapPin, Eye, Edit2, Trash2, DollarSign, Share2 } from 'lucide-react';
 import { Trip } from '@/types/trip';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import TripSharingModal from './TripSharingModal';
 
 interface TripCardProps {
   trip: Trip;
@@ -17,6 +18,7 @@ interface TripCardProps {
 const TripCard = ({ trip, index = 0, onDelete }: TripCardProps) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+  const [sharingModalOpen, setSharingModalOpen] = useState(false);
 
   const totalBudget = trip.budget.transport + trip.budget.stay + trip.budget.activities + trip.budget.meals;
 
@@ -146,6 +148,17 @@ const TripCard = ({ trip, index = 0, onDelete }: TripCardProps) => {
           >
             <Edit2 className="w-4 h-4" />
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSharingModalOpen(true);
+            }}
+            className="px-3 btn-press"
+          >
+            <Share2 className="w-4 h-4" />
+          </Button>
           {onDelete && (
             <Button
               variant="outline"
@@ -161,6 +174,15 @@ const TripCard = ({ trip, index = 0, onDelete }: TripCardProps) => {
           )}
         </div>
       </div>
+
+      {/* Trip Sharing Modal */}
+      <TripSharingModal
+        open={sharingModalOpen}
+        onOpenChange={setSharingModalOpen}
+        tripId={trip.id}
+        tripTitle={trip.title}
+        shareToken={trip.shareToken}
+      />
     </motion.div>
   );
 };
